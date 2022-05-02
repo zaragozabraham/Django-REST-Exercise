@@ -1,0 +1,8 @@
+INSTALL GRAPHENE
+pip install graphene-django
+pip freeze > requirements.txt
+
+IMPORT GRAPHENE
+{setting.py}
+"graphene_django"
+
