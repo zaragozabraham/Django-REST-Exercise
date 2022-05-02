@@ -15,6 +15,12 @@ class CustomPagination(pagination.PageNumberPagination):
     max_page_size = 10
     page_query_param = 'p'
 
+class CustomPaginationOffset(pagination.LimitOffsetPagination):
+    default_limit = 2
+    limit_query_param = 'l'
+    offset_query_param = 'o'
+    max_limit = 100
+
 class LibraryViewSet(viewsets.ModelViewSet):
     queryset = Library.objects.all().order_by('id')
     serializer_class = LibrarySerializer
@@ -48,24 +54,24 @@ class ThingViewSet(viewsets.ModelViewSet):
     serializer_class = ThingSerializer
     permission_classes = []
     
-@method_decorator(cache_page(60*60), name='dispatch')
+#@method_decorator(cache_page(60*60), name='dispatch')
 class AuthorViewSet(viewsets.ModelViewSet):
-    queryset = Author.objects.all().order_by('name')
+    queryset = Author.objects.all().order_by('id')
     serializer_class = AuthorSerializer
     permission_classes = []
     pagination_class = CustomPagination
     
-    def create(self, request):
-        print('Self:',dir(self))
-        print('Request:',dir(request))
-        print('self.options: ',self.options)
-        print('self.settings: ',self.settings)
-        print('self.setup: ',self.setup)
-        print('self.kwargs: ',self.kwargs)
-        print('self.args: ',self.args)
-        print('self.post: ',self.post)
-        print('request.post: ',request.POST)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    # def create(self, request):
+    #     print('Self:',dir(self))
+    #     print('Request:',dir(request))
+    #     print('self.options: ',self.options)
+    #     print('self.settings: ',self.settings)
+    #     print('self.setup: ',self.setup)
+    #     print('self.kwargs: ',self.kwargs)
+    #     print('self.args: ',self.args)
+    #     print('self.post: ',self.post)
+    #     print('request.post: ',request.POST)
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all().order_by('name')

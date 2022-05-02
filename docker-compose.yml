@@ -1,6 +1,6 @@
 version: '3'
 services:
-  postgres_db44:
+  postgres_db02:
     image: postgres:14-alpine
     container_name: "postgres${PORT}"
     environment:
@@ -15,7 +15,7 @@ services:
       - our-library-net
     command: "-p 55${PORT}"
 
-  redis_service44:
+  redis_service02:
     image: redis:7-alpine
     container_name: "redis${PORT}"
     environment:
@@ -28,13 +28,13 @@ services:
     networks:
       - our-library-net
 
-  web44:
+  web02:
     build: .
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:80${PORT}"
     container_name: "django${PORT}"
     depends_on: 
-      - postgres_db44
-      - redis_service44
+      - postgres_db02
+      - redis_service02
     environment:
       - "PSQL_DBNAME=${PSQL_DB}"
       - "PSQL_USERNAME=${PSQL_USER}"
