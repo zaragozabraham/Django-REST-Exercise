@@ -10,11 +10,16 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from graphene_django.views import GraphQLView
+
+urlpatterns = [
+    path('graphql', GraphQLView.as_view(graphiql=True)),
+]
 
 #from library.views import CustomTokenObtainPairView
 
 # JWT URLs
-urlpatterns = [
+urlpatterns += [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ] 

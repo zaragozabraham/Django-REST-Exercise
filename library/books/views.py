@@ -6,8 +6,14 @@ import base64
 from rest_framework.response import Response
 from rest_framework.parsers import FormParser, FileUploadParser, MultiPartParser, JSONParser
 from rest_framework import pagination
+
+from django.core.cache import cache
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from django.views.decorators.vary import vary_on_cookie
+from django.views.decorators.vary import vary_on_headers
+
+from rest_framework import status
 
 class CustomPagination(pagination.PageNumberPagination):
     page_size = 2
@@ -26,7 +32,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
     serializer_class = LibrarySerializer
     permission_classes = []
     
-    # Overriding list method to return only the ID of the library that are greater than Zero
+    @method_decorator(vary_on_headers('Authorization',))
+    @method_decorator(cache_page(60*60, key_prefix='main'), name='dispatch')
     def list(self, request):
         library_queryset = Library.objects.filter(id__gt = 0)
         # Try to play with the above line for example:
@@ -54,12 +61,12 @@ class ThingViewSet(viewsets.ModelViewSet):
     serializer_class = ThingSerializer
     permission_classes = []
     
-#@method_decorator(cache_page(60*60), name='dispatch')
+
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all().order_by('id')
     serializer_class = AuthorSerializer
     permission_classes = []
-    pagination_class = CustomPagination
+    # pagination_class = CustomPagination
     
     # def create(self, request):
     #     print('Self:',dir(self))
